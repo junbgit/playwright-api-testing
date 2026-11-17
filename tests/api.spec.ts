@@ -57,4 +57,53 @@ console.log("ACTUAL SERVER RESPONSE IS:", responseBody);
     expect(responseBody.userId).toBe(newPost.userId);
   });
 
+  // Test 3: Verifying a GET Request for a post that does not exist
+  test('1003 - Should return 404 when fetching a non-existent post', async ({ request }) => {
+    const response: APIResponse = await request.get('https://jsonplaceholder.typicode.com/posts/999999');
+
+    expect(response.status()).toBe(404);
+  });
+
+  // Test 4: Verifying a POST Request to an unsupported resource
+  test('1004 - Should return 404 when creating a post at an unsupported endpoint', async ({ request }) => {
+    const response: APIResponse = await request.post('https://jsonplaceholder.typicode.com/invalid-resource', {
+      data: {
+        title: 'Automating with Playwright TS',
+        body: 'Type safety ensures high-quality testing framework data.',
+        userId: 99
+      }
+    });
+
+    expect(response.status()).toBe(404);
+  });
+
+  // Test 5: Verifying a GET Request with a nonnumeric post ID
+  test('1005 - Should return 404 when fetching a post with a nonnumeric ID', async ({ request }) => {
+    const response: APIResponse = await request.get('https://jsonplaceholder.typicode.com/posts/not-a-number');
+
+    expect(response.status()).toBe(404);
+  });
+
+  // Test 6: Verifying a POST Request to a single-post URL
+  test('1006 - Should return 404 when creating a post at a single-post URL', async ({ request }) => {
+    const response: APIResponse = await request.post('https://jsonplaceholder.typicode.com/posts/1', {
+      data: {
+        title: 'Automating with Playwright TS',
+        body: 'Type safety ensures high-quality testing framework data.',
+        userId: 99
+      }
+    });
+
+    expect(response.status()).toBe(404);
+  });
+
+  // Test 7: Verifying a GET Request to an unsupported resource
+  test('1007 - Should return 404 when fetching an unsupported resource', async ({ request }) => {
+    const response: APIResponse = await request.get('https://jsonplaceholder.typicode.com/invalid-resource');
+
+    expect(response.status()).toBe(404);
+  });
+
+  // TODO: JSONPlaceholder may accept incomplete POST payloads; confirm whether payload-validation
+  // negatives should be tested against a service that enforces the request schema.
 });
